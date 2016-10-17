@@ -43,17 +43,17 @@ def get_body(mail_body):
     body = tree.xpath('/html/body/p[contains(text(), "Received From")]')
     if len(body) > 0:
         sender = str(body[0].text).replace('Received From', '').replace(':', '', 1).lstrip()
-        result['sender'] = quopri.decodestring(sender)
+        result['sender'] = sender
 
     body = tree.xpath('/html/body/p[contains(text(), "Received On")]')
     if len(body) > 0:
         sender = str(body[0].text).replace('Received On', '').replace(':', '', 1).lstrip()
-        result['date'] = quopri.decodestring(sender)
+        result['date'] = sender
 
     body = tree.xpath('/html/body/p[contains(text(), "SMS Text")]')
     if len(body) > 0:
         sender = str(body[0].text).replace('SMS Text', '').replace(':', '', 1).lstrip()
-        result['text'] = quopri.decodestring(sender)
+        result['text'] = sender
 
     print(result)
 
