@@ -67,12 +67,12 @@ def mail_check():
         html_text = quopri.decodestring(data[0][1]).decode('utf-8')
         parsed_message = parse_mail_body(html_text)
 
-        bot_message = '{} {}  ({}):'.format("\u2709" if parsed_message['is_message'] else "\u260E",
+        bot_message = '{} {}  ({})'.format("\u2709" if parsed_message['is_message'] else "\u260E",
                                             parsed_message['sender'],
                                             parsed_message['date'].strftime('%Y-%m-%d %H:%M:%S')
                                             )
         if parsed_message['is_message']:
-            bot_message = bot_message + '\r\n' + parsed_message['text']
+            bot_message = bot_message + ':\r\n' + parsed_message['text']
 
         bot.sendMessage(chat_id=bot.master, text=bot_message)
         mail.store(msg_id, '+FLAGS', '\Seen')
