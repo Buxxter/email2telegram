@@ -58,6 +58,7 @@ def parse_mail_body(mail_body):
         data = data.replace('сент.', 'сен.')
         data = data.replace('мая', 'май.')
         data = data.replace('июня', 'июн.')
+        data = data.replace('июля', 'июл.')
         am_pm = 'am' if ' am' in data.lower() else 'pm' if ' pm' in data.lower() else None
 
         if 'win' in sys.platform:
