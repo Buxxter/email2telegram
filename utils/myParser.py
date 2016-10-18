@@ -60,8 +60,11 @@ def parse_mail_body(mail_body):
 
         if 'win' in sys.platform:
             locale.setlocale(locale.LC_ALL, 'rus_rus')
-        else:
-            locale.setlocale(locale.LC_ALL, 'ru_RU')
+        elif 'linux':
+            locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
+        else:  # TODO: check it in macos
+            locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
+
 
         if am_pm is not None:
             data = data.lower().replace(' ' + am_pm, '')
