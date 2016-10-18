@@ -56,7 +56,7 @@ def parse_mail_body(mail_body):
     if len(body) > 0:
         data = str(body[0].text).replace('Received On', '').replace(':', '', 1).strip()
         data = data.replace('сент.', 'сен.')
-        am_pm = 'am' if ' am' in data.lower() else 'pm' if 'pm ' in data.lower() else None
+        am_pm = 'am' if ' am' in data.lower() else 'pm' if ' pm' in data.lower() else None
 
         if 'win' in sys.platform:
             locale.setlocale(locale.LC_ALL, 'rus_rus')
@@ -64,7 +64,6 @@ def parse_mail_body(mail_body):
             locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
         else:  # TODO: check it in macos
             locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
-
 
         if am_pm is not None:
             data = data.lower().replace(' ' + am_pm, '')
