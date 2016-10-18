@@ -58,14 +58,10 @@ def parse_mail_body(mail_body):
 
         am_pm = 'am' if ' am' in data.lower() else 'pm' if 'pm ' in data.lower() else None
 
-        cur_locale = locale.getlocale(locale.LC_ALL)
-        if cur_locale[0] is None or 'ru' not in cur_locale[0]:
-            logger.debug('Changing locale from {}'.format(cur_locale[0]))
-            if 'win' in sys.platform:
-                locale.setlocale(locale.LC_ALL, 'rus_rus')
-            else:
-                locale.setlocale(locale.LC_ALL, 'ru_RU')
-            logger.debug(locale.getlocale(locale.LC_ALL))
+        if 'win' in sys.platform:
+            locale.setlocale(locale.LC_ALL, 'rus_rus')
+        else:
+            locale.setlocale(locale.LC_ALL, 'ru_RU')
 
         if am_pm is not None:
             data = data.lower().replace(' ' + am_pm, '')

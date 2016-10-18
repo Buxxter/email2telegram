@@ -12,7 +12,7 @@ from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton
 import logging
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.WARNING)
 
 """
 $ python3.5 skeleton_class.py <token>
