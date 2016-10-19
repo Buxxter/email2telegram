@@ -24,12 +24,12 @@ bot = telegram.TelegramBot(TOKEN)
 bot.master = master
 bot.message_loop()
 
+username, account, password = secrets.authenticators('home_phone_mail')
+mail = imaplib.IMAP4_SSL(host='imap.yandex.ru', port=993)
+mail.login(user=username, password=password)
+mail.select('INBOX')
 
 def mail_check():
-    username, account, password = secrets.authenticators('home_phone_mail')
-    mail = imaplib.IMAP4_SSL(host='imap.yandex.ru', port=993)
-    mail.login(user=username, password=password)
-    mail.select('INBOX')
 
     result, data = mail.search(None, "(UNSEEN)")  # "(UNSEEN)"
 
@@ -78,6 +78,12 @@ def mail_check():
         mail.store(msg_id, '+FLAGS', '\Seen')
 
 
+counter = 5
 while 1:
-    mail_check()
-    time.sleep(30)
+    counter = counter + 1
+    if counter < 5:
+        mail.noop()
+    else:
+        mail_check()
+        counter = 0
+    time.sleep(5)
