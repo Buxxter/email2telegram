@@ -20,4 +20,4 @@ def logger_init(logger, module_name):
     ch.setFormatter(formatter)
 
     logger.addHandler(ch)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)

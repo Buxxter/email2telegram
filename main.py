@@ -24,14 +24,36 @@ bot = telegram.TelegramBot(TOKEN)
 bot.master = master
 bot.message_loop()
 
-username, account, password = secrets.authenticators('home_phone_mail')
+mail_username, account, mail_password = secrets.authenticators('home_phone_mail')
 mail = imaplib.IMAP4_SSL(host='imap.yandex.ru', port=993)
-mail.login(user=username, password=password)
-mail.select('INBOX')
+
+
+def mail_state_check_before_select(box):
+    if 'NONAUTH' == box.state:
+        box.login(user=mail_username, password=mail_password)
+
+    box.noop()
+
+
+def mail_get_unseen_count(box):
+    mail_state_check_before_select(box)
+    result, data = mail.status('SMS', '(UNSEEN)')
+    res = data[0].decode('ASCII')
+    res = res.replace('SMS (UNSEEN', '').replace(')', '').strip()
+    res = int(res)
+    logger.debug('Unseen count: {}'.format(res))
+    if res > 0:
+        logging.info('Have unread mail ({})'.format(res))
+    return res
+
 
 def mail_check():
 
-    result, data = mail.search(None, "(UNSEEN)")  # "(UNSEEN)"
+    mail_state_check_before_select(mail)
+
+    mail.select('SMS')
+
+    result, data = mail.search(None, '(UNSEEN FROM "buxxter.phone")')  # "(UNSEEN)"
 
     ids = data[0]  # data is a list.
     id_list = ids.split()  # ids is a space separated string
@@ -78,12 +100,15 @@ def mail_check():
         mail.store(msg_id, '+FLAGS', '\Seen')
 
 
-counter = 5
+counter = 30
 while 1:
     counter = counter + 1
-    if counter < 5:
+    if counter < 30 and mail_get_unseen_count(mail) == 0:
         mail.noop()
     else:
         mail_check()
         counter = 0
-    time.sleep(5)
+    time.sleep(1)
+
+mail.close()
+mail.logout()
