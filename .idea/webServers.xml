@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="2868b20c-31cf-4a37-b664-0c1fc39777dd" name="RaspberryWiFi" url="http://192.168.14.32">
+        <fileTransfer host="192.168.14.32" port="22" rootFolder="/home/pi/smart_house/email2telegram" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

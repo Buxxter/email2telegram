@@ -38,6 +38,13 @@ import locale
 
 logger = logging.getLogger(__name__)
 
+wrong_month = {
+        'сент.':    'сен.',
+        'мая':      'май.',
+        'июня':     'июн.',
+        'июля':     'июл.',
+        'нояб.':    'ноя.'
+}
 
 def parse_mail_body(mail_body):
     result = dict.fromkeys(['type', 'is_message', 'date', 'sender', 'text'])
@@ -55,10 +62,9 @@ def parse_mail_body(mail_body):
     body = tree.xpath('/html/body/p[contains(text(), "Received On")]')
     if len(body) > 0:
         data = str(body[0].text).replace('Received On', '').replace(':', '', 1).strip()
-        data = data.replace('сент.', 'сен.')
-        data = data.replace('мая', 'май.')
-        data = data.replace('июня', 'июн.')
-        data = data.replace('июля', 'июл.')
+        for key in wrong_month:
+            data = data.replace(key, wrong_month[key])
+
         am_pm = 'am' if ' am' in data.lower() else 'pm' if ' pm' in data.lower() else None
 
         if 'win' in sys.platform:

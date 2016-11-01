@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import traceback
 import os, sys
 from utils.log import *
 from utils.myParser import *
@@ -100,15 +101,25 @@ def mail_check():
         mail.store(msg_id, '+FLAGS', '\Seen')
 
 
-counter = 30
+sleep_time = 1
 while 1:
-    counter = counter + 1
-    if counter < 30 and mail_get_unseen_count(mail) == 0:
-        mail.noop()
-    else:
-        mail_check()
-        counter = 0
-    time.sleep(1)
+    try:
+        if mail_get_unseen_count(mail) == 0:
+            mail.noop()
+        else:
+            mail_check()
+            counter = 0
+            sleep_time = 1
+    except imaplib.IMAP4.abort as ex:
+        logger.debug(traceback.format_exc())
+        mail = imaplib.IMAP4_SSL(host='imap.yandex.ru', port=993)
+    except Exception as er:
+        bot.sendMessage(chat_id=bot.master, text=str(er))
+        mail = imaplib.IMAP4_SSL(host='imap.yandex.ru', port=993)
+        sleep_time = min(sleep_time * 10, 7200)
+
+    time.sleep(sleep_time)
 
 mail.close()
 mail.logout()
+mail = None
