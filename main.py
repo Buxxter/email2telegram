@@ -13,6 +13,8 @@ from email.header import Header, decode_header, make_header
 import quopri
 import telegram
 import time
+from socket import error as SocketError
+import errno
 
 logger = logging.getLogger()
 logger_init(logger, __name__)
@@ -113,8 +115,13 @@ while 1:
     except imaplib.IMAP4.abort as ex:
         logger.debug(traceback.format_exc())
         mail = imaplib.IMAP4_SSL(host='imap.yandex.ru', port=993)
+    except SocketError as er:
+        if er.errno != errno.ECONNRESET:
+            raise
+        pass
     except Exception as er:
-        bot.sendMessage(chat_id=bot.master, text=str(er))
+        logging.warning(traceback.format_exc())
+        bot.sendMessage(chat_id=bot.master, text=traceback.format_exc())
         mail = imaplib.IMAP4_SSL(host='imap.yandex.ru', port=993)
         sleep_time = min(sleep_time * 10, 7200)
 
