@@ -25,10 +25,9 @@ master, none_account, TOKEN = secrets.authenticators('personal_sms_resender_bot'
 logging.debug(TOKEN)
 bot = telegram.TelegramBot(TOKEN)
 bot.master = master
-bot.message_loop()
+bot.message_loop(relax=60)
 
 mail_username, account, mail_password = secrets.authenticators('home_phone_mail')
-mail = imaplib.IMAP4_SSL(host='imap.yandex.ru', port=993)
 
 
 def mail_state_check_before_select(box):
@@ -102,27 +101,44 @@ def mail_check():
         bot.sendMessage(chat_id=bot.master, text=bot_message)
         mail.store(msg_id, '+FLAGS', '\Seen')
 
-
+# logger.setLevel(logging.DEBUG)
+mail = None
 sleep_time = 1
+connected = False
+
+logger.info('Listening...')
 while 1:
     try:
+        if mail is None:
+            mail = imaplib.IMAP4_SSL(host='imap.yandex.ru', port=993)
+
         if mail_get_unseen_count(mail) == 0:
             mail.noop()
         else:
             mail_check()
             counter = 0
-            sleep_time = 1
+        sleep_time = 1
+        if not connected:
+            logger.info('Connected')
+            connected = True
+    except OSError as ex:   # Network problem
+        connected = False
+        logger.info(str(ex))
+        sleep_time = min(sleep_time + 10, 100)
+        pass
     except imaplib.IMAP4.abort as ex:
+        logger.debug(str(ex))
         logger.debug(traceback.format_exc())
-        mail = imaplib.IMAP4_SSL(host='imap.yandex.ru', port=993)
+        mail = None
     except SocketError as er:
+        logger.debug('{}: {}'.format('SE', traceback.format_exc()))
         if er.errno != errno.ECONNRESET:
             raise
         pass
-    except Exception as er:
+    except:
         logging.warning(traceback.format_exc())
         bot.sendMessage(chat_id=bot.master, text=traceback.format_exc())
-        mail = imaplib.IMAP4_SSL(host='imap.yandex.ru', port=993)
+        mail = None
         sleep_time = min(sleep_time * 10, 7200)
 
     time.sleep(sleep_time)

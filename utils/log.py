@@ -3,9 +3,9 @@
 
 import logging
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
-def logger_init(logger, module_name):
+def logger_init(logger, module_name=None):
     module_name = module_name if module_name is not None else __name__
     formatter = logging.Formatter('%(asctime)s - %(module)s[%(lineno)d] %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
