@@ -1,1 +1,6 @@
 2016-10-16 17:31:57 - main[11] WARNING: log_test
+2016-11-03 02:28:13 - main[126] WARNING: Traceback (most recent call last):
+  File "D:/Documents/Python/email2telegram/main.py", line 112, in <module>
+    if mail_get_unseen_count(mail) == 0:
+NameError: name 'mail' is not defined
+
