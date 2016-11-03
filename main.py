@@ -1,20 +1,20 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import logging
+import email
+import errno
+import imaplib
+import netrc
+import os
+import quopri
+import time
 import traceback
-import os, sys
+from email.header import decode_header, make_header
+from socket import error as SocketError
+
+import telegram
 from utils.log import *
 from utils.myParser import *
-import netrc
-import imaplib
-import email
-from email.header import Header, decode_header, make_header
-import quopri
-import telegram
-import time
-from socket import error as SocketError
-import errno
 
 logger = logging.getLogger()
 logger_init(logger, __name__)
@@ -101,7 +101,7 @@ def mail_check():
         bot.sendMessage(chat_id=bot.master, text=bot_message)
         mail.store(msg_id, '+FLAGS', '\Seen')
 
-# logger.setLevel(logging.DEBUG)
+
 mail = None
 sleep_time = 1
 connected = False
