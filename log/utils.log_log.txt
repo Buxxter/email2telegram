@@ -1,6 +1,0 @@
-
-2016-10-16 17:25:44 - main[9] WARNING: log_test
-2016-10-16 17:26:30 - main[9] WARNING: log_test
-2016-10-16 17:28:04 - main[9] WARNING: log_test
-2016-10-16 17:28:29 - main[10] WARNING: log_test
-2016-10-16 17:30:18 - main[11] WARNING: log_test
