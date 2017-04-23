@@ -9,15 +9,17 @@ import os
 import quopri
 import time
 import traceback
+import logging.config
 from email.header import decode_header, make_header
 from socket import error as SocketError
 
 import telegram
-from utils.log import *
+
+logging.config.fileConfig('log.conf')
+logger = logging.getLogger(__name__)
+
 from utils.myParser import *
 
-logger = logging.getLogger()
-logger_init(logger, __name__)
 secrets = netrc.netrc(
     file=os.path.join(os.environ['USERPROFILE'], "_netrc")) if 'win' in sys.platform else netrc.netrc()
 
